@@ -104,6 +104,10 @@ export default class PromQlLanguageProvider extends LanguageProvider {
   request = async (url: string, defaultValue: any, params = {}): Promise<any> => {
     try {
       const res = await this.datasource.metadataRequest(url, params);
+      if (res.data?.data === undefined) {
+        return defaultValue;
+      }
+
       return res.data.data;
     } catch (error) {
       console.error(error);

@@ -577,6 +577,18 @@ describe('Language completion provider', () => {
       await instance.start();
       expect((datasource.metadataRequest as Mock).mock.calls.length).toBeGreaterThan(0);
     });
+
+    it('returns default value when fetching label values for __name__ does not contain any values', async () => {
+      const datasource: PrometheusDatasource = ({
+        metadataRequest: jest.fn(() => ({})),
+        getTimeRangeParams: jest.fn(() => ({ start: '0', end: '1' })),
+        lookupsDisabled: false,
+      } as any) as PrometheusDatasource;
+      const instance = new LanguageProvider(datasource);
+
+      let metrics = await instance.fetchLabelValues('__name__');
+      expect(metrics).toMatchObject([]);
+    });
   });
 });
 
